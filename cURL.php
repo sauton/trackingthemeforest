@@ -9,45 +9,83 @@
 class cURLtheme
 {
 
-    private $url_source = 'https://themeforest.net';
+    private $url_source = 'https://themeforest.net/category';
     public $numrank = 5;
-    private $dom;
     private $arr_cat = [];
 
     public function __construct()
     {
-        $this->domHTML($this->url_source . '/category');
+
     }
 
 
     private function domHTML($url)
     {
-        $this->dom = new DOMDocument();
+        $dom = new DOMDocument();
         libxml_use_internal_errors(true);
-        $this->dom->loadHTML($this->curl_theme($url));
+        $dom->loadHTML($this->curl_theme($url));
+        return $dom;
     }
 
-    public function getUrlCategory($arg_cat=[],$preg='')
+    public function gettoprank($arr_nitches = ['/wordpress/blog-magazine'], $top = 5, $filter = 'sales')
     {
-        # Iterate over all the <a> tags
-        foreach ($this->dom->getElementsByTagName('a') as $link) {
-            # Show the <a href>
-            if (preg_match('#^\/category'.$preg.'\/[a-z]+[\/]#', $link->getAttribute('href')) && $link->textContent != 'All Items') {
-                preg_match('#^\/category'.$preg.'\/([a-z]+)[\/]#', $link->getAttribute('href'), $match);
-                print_r($match);
-                echo $link->getAttribute('href');
-                //  echo $link->textContent;
-                echo "<br />";
-                //$this->arr_cat[$match[1]][] = array($link->getAttribute('href'), $link->textContent);
+        $arr = [];
 
-                // echo $link->textContent;
-//                    echo "<br />";
-//                    echo $link->getAttribute('href');
-//                    echo "<br />";
+        $sort_by = '?sort=' . $filter;
+        if (!empty($arr_nitches)) {
+            $arr_nitches = $this->getUrlCategory();
+        }
+        foreach ($arr_nitches as $item) {
+
+            $dom = $this->domHTML($this->url_source . $item . $sort_by);
+            foreach ($dom->getElementsByTagName('a') as $link) {
+                # Show the <a href>
+                print_r($link->getAttribute('href'));
             }
         }
+        return $arr;
+
+    }
+
+    public function getUrlCategory($url = '')
+    {
+        if (empty($url)) {
+            $url = $this->url_source;
+        }
+        $dom = $this->domHTML($url);
+        # Iterate over all the <a> tags
+        foreach ($dom->getElementsByTagName('a') as $link) {
+            # Show the <a href>
+            if (preg_match('#^\/category\/[a-z]+[\/]#', $link->getAttribute('href')) && $link->textContent != 'All Items') {
+
+                $this->arr_cat[] = substr($link->getAttribute('href'), 9);
+
+            }
+        }
+
         return $this->arr_cat;
 
+    }
+
+    private function convertUrltoArray($arr)
+    {
+        foreach ($arr as $item) {
+            $path = $item;
+
+            $arr_cat = explode('/', substr($path, 1));
+
+            switch (count($arr_cat)) {
+                case 3:
+                    $this->arr_cat[$arr_cat[0]][$arr_cat[1]][$arr_cat[2]] = [];
+                    break;
+                case 4:
+                    $this->arr_cat[$arr_cat[0]][$arr_cat[1]][$arr_cat[2]][$arr_cat[3]] = [];
+                    break;
+                case 5:
+                    $this->arr_cat[$arr_cat[0]][$arr_cat[1]][$arr_cat[2]][$arr_cat[3]][$arr_cat[4]] = [];
+                    break;
+            }
+        }
     }
 
     private function curl_theme($url)
