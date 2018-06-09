@@ -6,48 +6,59 @@
  * Time: 9:59 AM
  */
 
-class cURL
+class cURLtheme
 {
 
-    private  $url_source = 'https://themeforest.net';
-    public  $numrank=5;
+    private $url_source = 'https://themeforest.net';
+    public $numrank = 5;
     private $dom;
+    private $arr_cat = [];
+
     public function __construct()
     {
         $this->domHTML($this->url_source . '/category');
     }
 
 
-    private function domHTML($url){
+    private function domHTML($url)
+    {
         $this->dom = new DOMDocument();
         libxml_use_internal_errors(true);
         $this->dom->loadHTML($this->curl_theme($url));
     }
-    public function getUrlCategory()
-    {
 
-        //$XPath = new DOMXPath($doc);
-        //$tr = $XPath->query('//*[@id="right"]//*[@class="olddata"][1]//td[@class="numeric"][1]');
-        //$trHTML = $tr->item(0)->nodeValue;
-        //echo $trHTML;
+    public function getUrlCategory($arg_cat=[],$preg='')
+    {
         # Iterate over all the <a> tags
         foreach ($this->dom->getElementsByTagName('a') as $link) {
             # Show the <a href>
-            if (preg_match('#^\/category\/#', $link->getAttribute('href')) && $link->textContent != 'All Items') {
-                echo $link->textContent;
-                echo "<br />";
+            if (preg_match('#^\/category'.$preg.'\/[a-z]+[\/]#', $link->getAttribute('href')) && $link->textContent != 'All Items') {
+                preg_match('#^\/category'.$preg.'\/([a-z]+)[\/]#', $link->getAttribute('href'), $match);
+                print_r($match);
                 echo $link->getAttribute('href');
+                //  echo $link->textContent;
                 echo "<br />";
+                //$this->arr_cat[$match[1]][] = array($link->getAttribute('href'), $link->textContent);
+
+                // echo $link->textContent;
+//                    echo "<br />";
+//                    echo $link->getAttribute('href');
+//                    echo "<br />";
             }
         }
-    }
-    private function curl_theme($url){
+        return $this->arr_cat;
 
-        if(!$res=$this->getUrlContent($url)){
+    }
+
+    private function curl_theme($url)
+    {
+
+        if (!$res = $this->getUrlContent($url)) {
             die('Error cURL ');
         }
         return $res;
     }
+
     private function getUrlContent($url)
     {
         $ch = curl_init();

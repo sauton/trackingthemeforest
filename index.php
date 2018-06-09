@@ -8,5 +8,9 @@
 require('cURL.php');
 require('dom/simple_html_dom.php');
 
-$cate=new cURL();
-$cate->getUrlCategory();
+$cate=new cURLtheme();
+$res=$cate->getUrlCategory();
+
+echo '<pre>';
+print_r($res);
+echo '</pre>';
