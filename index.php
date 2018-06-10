@@ -72,7 +72,7 @@ foreach ($rank->arr_cat as $key => $value) {
 </form><?php
 
 
-$res_rank_url = $rank->gettoprank($themes, 5, $sortby);
+$res_rank_url = $rank->gettoprank($themes, $top, $sortby);
 
 echo '<pre>';
 //print_r($res_rank);
