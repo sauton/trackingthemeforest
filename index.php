@@ -9,15 +9,10 @@
 </head>
 <body>
 <?php
-/**
- * Created by PhpStorm.
- * User: thang
- * Date: 6/9/18
- * Time: 9:49 AM
- */
 
 
-require('cURL.php');
+
+require('controller/cURL.php');
 $rank = new cURLtheme();
 
 //page one get url cat
@@ -149,6 +144,8 @@ if (!empty($themes)) {
 
     array2csv($array_rank_url_detail, $sortby);
 }
+//convert to databases mysql
+
 
 //sortby
 // any date
