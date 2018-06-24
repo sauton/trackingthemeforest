@@ -174,16 +174,19 @@ class cURLtheme {
 
 		if ( count( $arr_temp ) > 0 ):
 			foreach ( $arr_temp as $key => $value ) :
-
+				//parent menu
 				if ( count( $value ) > 0 ) {
-					$output_temp = $output;
-					$output_temp .= '/' . $key;
+					$output_temp = $output . '/' . $key;
 					echo '<pre>';
-					print_r( $output . '/' . $key );
+					echo 'PARENT';
+					echo $output . '/' . $key;
 					echo '</pre>';
 					$this->getCategoryForm( $value, $output_temp );
-				} else {
+				} //END child menu
+				else {
 					echo '<pre>';
+					echo 'End Child';
+
 					echo $output . '/' . $key;
 					echo '</pre>';
 				}
@@ -197,9 +200,6 @@ class cURLtheme {
 //				$output .= '<td><label><input type="checkbox" name="themes[]" value="' . $key . '">' . $value . '</label></td>';
 //			}
 			endforeach;
-		else:
-			echo count( $arr_temp );
-			print_r( $arr_temp );
 
 		endif;
 
