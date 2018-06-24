@@ -16,12 +16,12 @@
 
 <?php
 
-require('controller/cURL.php');
-require('model/themeforest.php');
+require( 'controller/cURL.php' );
+require( 'model/themeforest.php' );
 $rank = new cURLtheme();
 
 
-$rank->getCategoryForm($rank->arrange_category(), '');
+$rank->getCategoryForm( $rank->arrange_category(), '' );
 
 ?>
 <div class="fixed-table">
@@ -54,11 +54,11 @@ $rank->getCategoryForm($rank->arrange_category(), '');
                         </select>
                         top
                         <select name="top" id="">
-                            <?php
-                            for ($i = 1; $i < 32; $i++) {
-                                echo ' <option value="' . $i . '">' . $i . '</option>';
-                            }
-                            ?>
+							<?php
+							for ( $i = 1; $i < 32; $i ++ ) {
+								echo ' <option value="' . $i . '">' . $i . '</option>';
+							}
+							?>
                         </select>
                         <input type="submit">
                     </table>
@@ -67,29 +67,30 @@ $rank->getCategoryForm($rank->arrange_category(), '');
             <div id="menu1" class="tab-pane fade">
                 <h3>Favorite Theme</h3>
                 <form id="get_specific_theme" action="" method="get">
-                    <?php
-                    $model_themeforest = new themeforest_model();
-                    $model_themeforest->getFavoriteListTheme();
-                    ?>
+					<?php
+					$model_themeforest = new themeforest_model();
+					$model_themeforest->getFavoriteListTheme();
+					?>
                     <input type="submit">
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 <?php
 
 $sortby = '';
-$top = '';
+$top    = '';
 $themes = [];
-if (!empty($_GET['top'])) {
-    $top = $_GET['top'];
+if ( ! empty( $_GET['top'] ) ) {
+	$top = $_GET['top'];
 }
-if (!empty($_GET['sort'])) {
-    $sortby = $_GET['sort'];
+if ( ! empty( $_GET['sort'] ) ) {
+	$sortby = $_GET['sort'];
 }
-if (!empty($_GET['themes'])) {
-    $themes = $_GET['themes'];
+if ( ! empty( $_GET['themes'] ) ) {
+	$themes = $_GET['themes'];
 }
 
 

@@ -10,8 +10,8 @@ $(function () {
             var top = '';
             $.each(array_link_url, function (index, value) {
 
-                console.log(index);
-                console.log(value);
+                // console.log(index);
+                // console.log(value);
                 switch (value.name) {
                     case 'sort':
                         sort = value.value;
@@ -26,7 +26,7 @@ $(function () {
                         return;
                         break;
                 }
-                var data = {themes: value.value + "?sort=" + sort + "&date=" + date + "&top=" + top};
+                var data = {themes: value.value, sort: sort, date: date, top: top};
                 console.log(data);
                 $.ajax({
                     url: "controller/ajax.php",
@@ -36,6 +36,9 @@ $(function () {
                     },
                     success: function (res) {
                         console.log(res);
+                        if (res == 'Error_CURL') {
+                            $.ajax(this);
+                        }
                     },
                     type: 'GET'
                 });
@@ -44,7 +47,7 @@ $(function () {
         });
         $("input").on("change", function () {
             $("#get_list_category").append($(this).parent());
-            console.log($(this).val());
+            // console.log($(this).val());
         });
     };
 

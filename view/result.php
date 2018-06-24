@@ -7,12 +7,8 @@
  */
 
 if (!empty($themes)) {
+
 	$res_rank_url = $rank->gettoprank($themes, $top, $sortby);
-
-	echo '<pre>';
-//print_r($res_rank);
-	echo '</pre>';
-
 
 	$array_rank_url_detail = [];
 	foreach ($res_rank_url as $key => $value) {
