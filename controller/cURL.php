@@ -64,16 +64,27 @@ class cURLtheme {
 		return $this->dom;
 	}
 
-	public function getlisttoprank( $arr_nitches = '', $filter = 'sales', $date = '', $top = 5 ) {
+	public function getlisttoprank( $arr_nitches = [], $sortby = 'sales', $date = '', $top = 5 ) {
 		$arr = [];
 
-		$sort_by = '?sort=' . $filter;
+		if ( ! empty( $sortby ) ) {
+
+			$sortby = '?sort=' . $sortby;
+
+		}
+		if ( ! empty( $date ) ) {
+
+			$date = '&date=' . $date;
+
+		}
 		if ( empty( $arr_nitches ) ) {
 			$arr_nitches = $this->arr_cat;
 		}
-		foreach ( $arr_nitches as $item ) {
 
-			$this->domHTML( $this->url_source . $item . $sort_by );
+		foreach ( $arr_nitches as $item ) {
+			$url_crawler = $item . $sortby . $date;
+//			print_r( $url_crawler );
+			$this->domHTML( $url_crawler );
 
 			$url_arr = explode( '/', $item );
 			$url_arr = $url_arr[ count( $url_arr ) - 1 ];
@@ -118,6 +129,7 @@ class cURLtheme {
 		return $arr;
 	}
 
+	/*  $$url = 'https://themeforest.net/item/mevo-creative-one-page-wordpress-theme/12910432?s_rank=11'   */
 	public function getDetailTheme( $url ) {
 		$curl = $this->curl_theme( $url );
 
@@ -129,6 +141,7 @@ class cURLtheme {
 		preg_match( '#js-purchase-price">(.*?)</span>#', $curl, $price );
 		preg_match( '#sidebar-stats__number">(.*?)</strong>#', $curl, $sale );
 		preg_match( '#<a\srel="author".*href="(.*)">(.*)</a>#', $curl, $author );
+		preg_match( '#ibutes__attr-detail.*<span>(.*?)</span>#', $curl, $created );
 
 
 		return array(
@@ -137,7 +150,8 @@ class cURLtheme {
 			$author[2],
 			$author[1],
 			$sale[1],
-			$price[1]
+			$price[1],
+			$created[1]
 		);
 
 	}
@@ -165,9 +179,9 @@ class cURLtheme {
 	}
 
 	private function curl_theme( $url ) {
-
 		if ( ! $res = $this->getUrlContent( $url ) ) {
-			die( 'Error_CURL' );
+			$this->getUrlContent( $url );
+//			print_r( 'Error_CURL' );
 		}
 
 		return $res;
@@ -176,12 +190,10 @@ class cURLtheme {
 	private function getUrlContent( $url ) {
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $url );
-		curl_setopt( $ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0' );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 5 );
-		curl_setopt( $ch, CURLOPT_TIMEOUT, 5 );
 		$data     = curl_exec( $ch );
 		$httpcode = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+
 		curl_close( $ch );
 
 		return ( $httpcode >= 200 && $httpcode < 300 ) ? $data : false;
@@ -206,35 +218,73 @@ class cURLtheme {
 
 	public function getCategoryForm( $arr_temp, $output ) {
 		if ( count( $arr_temp ) > 0 ):
+
+			$html_format['input'] = '<li>
+                        <label>
+                            <input type="checkbox" name="themes[]"
+                                   value="%1$s">%2$s
+                        </label>
+                    </li>';
 			foreach ( $arr_temp as $key => $value ) :
 				//parent menu
 				echo '<ul>';
 				if ( count( $value ) > 0 ) {
 					$output_temp = $output . '/' . $key;
-					?>
-                    <li>
-                        <label>
-                            <input type="checkbox" name="themes"
-                                   value="<?php echo $this->getUrlThemeforest() . $output . '/' . $key; ?>"><?php echo $key; ?>
-                        </label>
-                    </li>
-					<?php
+					printf( $html_format['input'], $this->getUrlThemeforest() . $output . '/' . $key, $key );
 					$this->getCategoryForm( $value, $output_temp );
 				} //END child menu
 				else {
-					?>
-                    <li>
-                        <label>
-
-                            <input type="checkbox" name="themes"
-                                   value="<?php echo $this->getUrlThemeforest() . $output . '/' . $key; ?>"><?php echo $key; ?>
-                        </label>
-                    </li>
-					<?php
+					printf( $html_format['input'], $this->getUrlThemeforest() . $output . '/' . $key, $key );
 				}
 				echo '</ul>';
 			endforeach;
 		endif;
+	}
+
+	public function createArrayDetailTheme( $title, $url_title, $author_name, $author_link, $sale, $price, $created ) {
+
+		$array = array(
+			'title',
+			'url_title',
+			'author_link',
+			'author',
+			'sale',
+			'sale',
+			'created',
+			'Date Update',
+			'avarage'
+		);
+
+
+		return array_merge( $array, array(
+			$title,
+			$url_title,
+			$author_link,
+			$author_link,
+			$author_name,
+			$sale,
+			$price,
+			$created
+		) );
+
+
+	}
+
+	public function getTdDetailTheme( $array = [] ) {
+		if ( ! empty( $array ) ) {
+			$output='';
+			foreach ( $array as $v ) {
+				$output .= '<tr>';
+				$output .= '<td></td>';
+				$output .= '<td><a href="' . $v[1] . '">' . $v[0] . '</a></td>';
+				$output .= '<td><a href="' . $v[3] . '">' . $v[2] . '</a></td>';
+				$output .= '<td>' . $v[4] . '</td>';
+				$output .= '<td>' . $v[5] . '</td>';
+				$output .= '<td>' . $v[6] . '</td>';
+				$output .= '</tr>';
+			}
+			echo $output;
+		}
 	}
 }
 

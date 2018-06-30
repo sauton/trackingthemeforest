@@ -25,8 +25,6 @@ $rank->getCategoryForm( $rank->arrange_category(), '' );
 
 ?>
 <div class="fixed-table">
-
-
     <div class="container">
         <h2>Thang</h2>
         <ul class="nav nav-tabs">
@@ -76,22 +74,11 @@ $rank->getCategoryForm( $rank->arrange_category(), '' );
             </div>
         </div>
     </div>
+    <div class="show_detail_themes">
+    </div>
 </div>
 
 <?php
-
-$sortby = '';
-$top    = '';
-$themes = [];
-if ( ! empty( $_GET['top'] ) ) {
-	$top = $_GET['top'];
-}
-if ( ! empty( $_GET['sort'] ) ) {
-	$sortby = $_GET['sort'];
-}
-if ( ! empty( $_GET['themes'] ) ) {
-	$themes = $_GET['themes'];
-}
 
 
 ?>

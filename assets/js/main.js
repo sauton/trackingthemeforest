@@ -1,6 +1,6 @@
-$(function () {
+jQuery(function ($) {
     var thang = {};
-    thang.getlistLink = function () {
+    thang.getlistLink_ajax_each = function () {
         $("form").on("submit", function (e) {
             e.preventDefault();
             var array_link_url = $(this).serializeArray();
@@ -27,7 +27,6 @@ $(function () {
                         break;
                 }
                 var data = {themes: value.value, sort: sort, date: date, top: top};
-                console.log(data);
                 $.ajax({
                     url: "controller/ajax.php",
                     data: data,
@@ -51,8 +50,35 @@ $(function () {
         });
     };
 
+
+    thang.getlistLink_server_each = function () {
+        $("form").on("submit", function (e) {
+            e.preventDefault();
+            var array_link_url = $(this).serializeArray();
+            console.log(array_link_url);
+
+            $.ajax({
+                url: "controller/ajax.php",
+                data: array_link_url,
+                error: function () {
+                    console.log('error');
+                },
+                success: function (res) {
+                    console.log(res);
+                    $('.show_detail_themes').html(res);
+                },
+                type: 'GET'
+            });
+        });
+        $("input").on("change", function () {
+            $("#get_list_category").append($(this).parent());
+            // console.log($(this).val());
+        });
+    };
+
     $(document).ready(function () {
         console.log('ready');
-        thang.getlistLink();
+        //thang.getlistLink_ajax_each();
+        thang.getlistLink_server_each();
     })
 });
