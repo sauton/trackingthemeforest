@@ -26,6 +26,9 @@ if ( ! empty( $_GET['themes'] ) ) {
 		case 'detail':
 			$curl->getAjaxDetailTheme();
 			break;
+		case 'weekly_sale':
+			$curl->getAjaxWeeklySale();
+			break;
 	}
 } else {
 	echo 'meo co';

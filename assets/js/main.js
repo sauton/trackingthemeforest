@@ -50,11 +50,23 @@ jQuery(function ($) {
         });
     };
 
+    function getAllInputValues(inputValues) {
+        $('.listcategory :input').map(function () {
+            var type = $(this).prop("type");
+
+            // checked radios/checkboxes
+            if ((type == "checkbox" || type == "radio") && this.checked) {
+                inputValues.push({name: "themes[]", value: $(this).val()});
+            }
+        });
+        return inputValues;
+    }
 
     thang.getlistLink_server_each = function () {
         $("form").on("submit", function (e) {
             e.preventDefault();
             var array_link_url = $(this).serializeArray();
+            array_link_url = getAllInputValues(array_link_url);
             console.log(array_link_url);
             that = $(this);
             $.ajax({
@@ -70,10 +82,27 @@ jQuery(function ($) {
                 type: 'GET'
             });
         });
-        $(".listcategory input").on("change", function () {
-            $("#get_list_category").append($(this).parent());
-            // console.log($(this).val());
+        $(".get_weekly_sale").on('click', function () {
+            var array_link_url = [{name: 'type', value: 'weekly_sale'}];
+            array_link_url = getAllInputValues(array_link_url);
+            console.log(array_link_url);
+            that = $(this).parent();
+            $.ajax({
+                url: "controller/ajax.php",
+                data: array_link_url,
+                error: function () {
+                    console.log('error');
+                },
+                success: function (res) {
+                    console.log(res);
+                    that.find('.show_detail_themes').html(res);
+                },
+                type: 'GET'
+            });
+
+
         });
+
     };
 
     $(document).ready(function () {

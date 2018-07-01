@@ -33,6 +33,7 @@ $rank = new cURLtheme();
             <li class="active"><a data-toggle="tab" class="active show" href="#home">Get Top List</a></li>
             <li><a data-toggle="tab" href="#menu1">Get Favorite Detail</a></li>
             <li><a data-toggle="tab" href="#menu2">Get Detail Theme</a></li>
+            <li><a data-toggle="tab" href="#menu3">Get Weekly Nitches Sales</a></li>
         </ul>
 
         <div class="tab-content">
@@ -86,7 +87,10 @@ $rank = new cURLtheme();
             <div id="menu2" class="tab-pane fade">
                 <h3>Get Detail Theme</h3>
                 <form id="get_specific_theme" action="" method="get">
-                    <label for="">Detail Theme<input type="text" name="themes[]"></label>
+                    <label for="">Detail Theme:
+                        https://themeforest.net/item/arredo-a-clean-woocommerce-wordpress-theme/22122445?s_rank=1
+                        <input
+                                type="text" name="themes[]"></label>
                     <!-- define type to get  -->
                     <input type="hidden" name="type" value="detail">
 
@@ -94,6 +98,13 @@ $rank = new cURLtheme();
                     <div class="show_detail_themes">
                     </div>
                 </form>
+            </div>
+            <div id="menu3" class="tab-pane fade">
+                <h3>Get Weekly Nitches Sales</h3>
+                <!-- define type to get  -->
+                <button class="btn-danger get_weekly_sale">GetAll Top 10</button>
+                <div class="show_detail_themes">
+                </div>
             </div>
         </div>
     </div>
