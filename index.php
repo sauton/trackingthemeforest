@@ -19,17 +19,20 @@
 require( 'controller/cURL.php' );
 require( 'model/themeforest.php' );
 $rank = new cURLtheme();
-
-
-$rank->getCategoryForm( $rank->arrange_category(), '' );
-
 ?>
+
+<div class="listcategory">
+	<?php
+	$rank->getCategoryForm( $rank->arrange_category(), '' );
+	?>
+</div>
 <div class="fixed-table">
-    <div class="container">
+    <div class="container scroll">
         <h2>Thang</h2>
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" class="active show" href="#home">Get Top List</a></li>
             <li><a data-toggle="tab" href="#menu1">Get Favorite Detail</a></li>
+            <li><a data-toggle="tab" href="#menu2">Get Detail Theme</a></li>
         </ul>
 
         <div class="tab-content">
@@ -59,7 +62,11 @@ $rank->getCategoryForm( $rank->arrange_category(), '' );
 							?>
                         </select>
                         <input type="submit">
+                        <div class="show_detail_themes">
+                        </div>
                     </table>
+                    <!-- define type to get  -->
+                    <input type="hidden" name="type" value="category">
                 </form>
             </div>
             <div id="menu1" class="tab-pane fade">
@@ -69,13 +76,28 @@ $rank->getCategoryForm( $rank->arrange_category(), '' );
 					$model_themeforest = new themeforest_model();
 					$model_themeforest->getFavoriteListTheme();
 					?>
+                    <!-- define type to get  -->
+                    <input type="hidden" name="type" value="detail">
                     <input type="submit">
+                    <div class="show_detail_themes">
+                    </div>
+                </form>
+            </div>
+            <div id="menu2" class="tab-pane fade">
+                <h3>Get Detail Theme</h3>
+                <form id="get_specific_theme" action="" method="get">
+                    <label for="">Detail Theme<input type="text" name="themes[]"></label>
+                    <!-- define type to get  -->
+                    <input type="hidden" name="type" value="detail">
+
+                    <input type="submit">
+                    <div class="show_detail_themes">
+                    </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="show_detail_themes">
-    </div>
+
 </div>
 
 <?php

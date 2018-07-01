@@ -56,7 +56,7 @@ jQuery(function ($) {
             e.preventDefault();
             var array_link_url = $(this).serializeArray();
             console.log(array_link_url);
-
+            that = $(this);
             $.ajax({
                 url: "controller/ajax.php",
                 data: array_link_url,
@@ -65,12 +65,12 @@ jQuery(function ($) {
                 },
                 success: function (res) {
                     console.log(res);
-                    $('.show_detail_themes').html(res);
+                    that.find('.show_detail_themes').html(res);
                 },
                 type: 'GET'
             });
         });
-        $("input").on("change", function () {
+        $(".listcategory input").on("change", function () {
             $("#get_list_category").append($(this).parent());
             // console.log($(this).val());
         });

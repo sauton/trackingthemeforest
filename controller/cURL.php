@@ -249,7 +249,6 @@ class cURLtheme {
 			'author_link',
 			'author',
 			'sale',
-			'sale',
 			'created',
 			'Date Update',
 			'avarage'
@@ -272,20 +271,149 @@ class cURLtheme {
 
 	public function getTdDetailTheme( $array = [] ) {
 		if ( ! empty( $array ) ) {
-			$output='';
+			/*
+			 * Array(
+			     Array(
+                    [0] =>  Arredo - A Clean WooCommerce WordPress Theme
+                    [1] => https://themeforest.net/item/arredo-a-clean-woocommerce-wordpress-theme/22122445?s_rank=1
+                    [2] => Select-Themes
+                    [3] => https://themeforest.net/user/select-themes
+                    [4] =>   35
+                    [5] => $59
+                    [6] =>  20 June 18
+                    )
+			    )
+			 * */
+			$output = '';
 			foreach ( $array as $v ) {
+				/*
+                    1= 'title',
+                    0= 'url_title',
+                    3= 'author_link',
+                    2='author',
+                    4='sale',
+                    5='created',
+                    6='Date Update',
+				* */
+				$now  = time();
+				$time = strtotime( $v[6] );
+
+				$date_diff = $now - $time;
+				$total_day = round( $date_diff / ( 60 * 60 * 24 ) );
+				$res       = round( (int) $v[4] / $total_day, 2 );
+
 				$output .= '<tr>';
 				$output .= '<td></td>';
 				$output .= '<td><a href="' . $v[1] . '">' . $v[0] . '</a></td>';
 				$output .= '<td><a href="' . $v[3] . '">' . $v[2] . '</a></td>';
 				$output .= '<td>' . $v[4] . '</td>';
 				$output .= '<td>' . $v[5] . '</td>';
-				$output .= '<td>' . $v[6] . '</td>';
+				$output .= '<td>' . date( 'd/m/Y', strtotime( $v[6] ) ) . '</td>';
+				$output .= '<td>' . date( "d/m/Y", $now ) . '</td>';
+				$output .= '<td>' . $total_day . '</td>';
+				$output .= '<td>' . $res . '</td>';
 				$output .= '</tr>';
 			}
 			echo $output;
 		}
 	}
+
+
+	public function getAjaxDetailTheme() {
+		?>
+
+        <table class="table-bordered">
+            <tr>
+                <td>Nitches</td>
+                <td>Theme</td>
+                <td>Author</td>
+                <td>Sale</td>
+                <td>Price</td>
+                <td>Created</td>
+                <td>Date Update</td>
+                <td>Total_Day</td>
+                <td>Sales/Total_Day</td>
+            </tr>
+
+			<?php
+			foreach ( $_GET['themes'] as $value_url_theme ):
+				$theme_Detail = $this->getDetailTheme( $value_url_theme );
+
+				$this->getTdDetailTheme( array( $theme_Detail ) );
+			endforeach;
+
+			?>
+        </table>
+		<?php
+	}
+
+	public function getAjaxTopCategory() {
+		$theme = $_GET['themes'];
+		$sort  = ! empty( $_GET['sort'] ) ? $_GET['sort'] : '';
+		$date  = ! empty( $_GET['date'] ) ? $_GET['date'] : '';
+		$top   = ! empty( $_GET['top'] ) ? $_GET['top'] : '';
+
+//	$detail_theme = $curl->getDetailTheme( $_GET['themes'] );
+//	$res_rank_url = $curl->get_nitches_toprank( $theme, $_GET['sort'], $_GET['date'], $_GET['top'] );
+		$res_rank_url = $this->getlisttoprank( $theme, $sort, $date, $top );
+
+//	print_r( $_GET );
+//	print_r( $res_rank_url );
+		$array_rank_url_detail = [];
+		/*     $res_rank_url
+		[photography] => Array
+			(
+				[0] => https://themeforest.net/item/kingsize-fullscreen-photography-theme/166299?s_rank=1
+				[1] => https://themeforest.net/item/core-minimalist-photography-portfolio/240185?s_rank=2
+
+			)
+
+		[art] => Array
+			(
+				[0] => https://themeforest.net/item/wave-wordpress-theme-for-artists/5038373?s_rank=1
+				[1] => https://themeforest.net/item/tattoo-pro-your-tattoo-shop-wordpress-theme/11690958?s_rank=2
+					)
+
+		[experimental] => Array
+			(
+				[0] => https://themeforest.net/item/anthe-wordpress/4070793?s_rank=1
+				[1] => https://themeforest.net/item/greenwich-village-one-page-wordpress-theme/7472860?s_rank=2
+			)
+	*/
+		if ( true && ! empty( $res_rank_url ) ) {
+			foreach ( $res_rank_url as $key => $value ) {
+				foreach ( $value as $val ) {
+					$array_rank_url_detail[ $key ][] = $this->getDetailTheme( $val );
+				}
+			}
+//		print_r( $array_rank_url_detail );
+		}
+		if ( true && ! empty( $array_rank_url_detail ) ):?>
+
+            <table class="table-bordered">
+                <tr>
+                    <td>Nitches</td>
+                    <td>Theme</td>
+                    <td>Author</td>
+                    <td>Sale</td>
+                    <td>Price</td>
+                    <td>Created</td>
+                </tr>
+
+				<?php
+				foreach ( $array_rank_url_detail as $key => $val ) {
+					echo '<td>' . $key . '</td>';
+					$this->getTdDetailTheme( $val );
+				}
+				?>
+            </table>
+		<?php
+		endif;
+
+//    print_r($detail_theme);
+	}
+
+
 }
 
 ?>
