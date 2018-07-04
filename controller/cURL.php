@@ -475,7 +475,6 @@ class cURLtheme {
 		$sort  = ! empty( $_GET['sort'] ) ? $_GET['sort'] : '';
 		$date  = ! empty( $_GET['date'] ) ? $_GET['date'] : '';
 		$top   = ! empty( $_GET['top'] ) ? $_GET['top'] : '';
-
 //	$detail_theme = $curl->getDetailTheme( $_GET['themes'] );
 //	$res_rank_url = $curl->get_nitches_toprank( $theme, $_GET['sort'], $_GET['date'], $_GET['top'] );
 		$res_rank_url = $this->getlisttoprank( $theme, $sort, $date, $top );

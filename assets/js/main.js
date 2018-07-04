@@ -63,10 +63,46 @@ jQuery(function ($) {
     }
 
     thang.getlistLink_server_each = function () {
-        $("form").on("submit", function (e) {
+        $("#home form").on("submit", function (e) {
             e.preventDefault();
             var array_link_url = $(this).serializeArray();
             array_link_url = getAllInputValues(array_link_url);
+            console.log(array_link_url);
+            that = $(this);
+            $.ajax({
+                url: "controller/ajax.php",
+                data: array_link_url,
+                error: function () {
+                    console.log('error');
+                },
+                success: function (res) {
+                    console.log(res);
+                    that.find('.show_detail_themes').html(res);
+                },
+                type: 'GET'
+            });
+        });
+        $("#menu1 form").on("submit", function (e) {
+            e.preventDefault();
+            var array_link_url = $(this).serializeArray();
+            console.log(array_link_url);
+            that = $(this);
+            $.ajax({
+                url: "controller/ajax.php",
+                data: array_link_url,
+                error: function () {
+                    console.log('error');
+                },
+                success: function (res) {
+                    console.log(res);
+                    that.find('.show_detail_themes').html(res);
+                },
+                type: 'GET'
+            });
+        });
+        $("#menu2 form").on("submit", function (e) {
+            e.preventDefault();
+            var array_link_url = $(this).serializeArray();
             console.log(array_link_url);
             that = $(this);
             $.ajax({

@@ -28,7 +28,7 @@ $rank = new cURLtheme();
 </div>
 <div class="fixed-table">
     <div class="container scroll">
-        <h2>Thang</h2>
+        <h2>Track ThemeForest</h2>
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" class="active show" href="#home">Get Top List</a></li>
             <li><a data-toggle="tab" href="#menu1">Get Favorite Detail</a></li>
