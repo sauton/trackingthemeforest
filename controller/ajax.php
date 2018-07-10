@@ -21,13 +21,13 @@ if ( ! empty( $_GET['themes'] ) ) {
 
 	switch ( $_GET['type'] ) {
 		case 'category' :
-			$curl->getAjaxTopCategory();
+			$curl->array2csv( $curl->getAjaxTopCategory(),'top' );
 			break;
 		case 'detail':
-			$curl->getAjaxDetailTheme();
+			$curl->array2csv( $curl->getAjaxDetailTheme(), 'detail' );
 			break;
 		case 'weekly_sale':
-			$curl->getAjaxWeeklySale();
+			$curl->array2csv( $curl->getAjaxWeeklySale(), 'weekly' );
 			break;
 	}
 } else {

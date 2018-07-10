@@ -80,14 +80,14 @@ class cURLtheme {
 	}
 
 	private function domHTML( $url ) {
-		libxml_use_internal_errors( true );
+		libxml_use_internal_errors( TRUE );
 		$this->dom->loadHTML( $this->curl_theme( $url ) );
 
 		return $this->dom;
 	}
 
 	private function getArray( $node ) {
-		$array = false;
+		$array = FALSE;
 
 		if ( $node->hasAttributes() ) {
 			foreach ( $node->attributes as $attr ) {
@@ -266,15 +266,15 @@ class cURLtheme {
 
 		curl_close( $ch );
 
-		return ( $httpcode >= 200 && $httpcode < 300 ) ? $data : false;
+		return ( $httpcode >= 200 && $httpcode < 300 ) ? $data : FALSE;
 	}
 
-	public function array2csv( array $array, $sortby ) {
+	public function array2csv( array $array, $title = 'default' ) {
 		if ( count( $array ) == 0 ) {
-			return null;
+			return NULL;
 		}
 		ob_start();
-		$df = fopen( "" . date( 'Y-m-d' ) . $sortby . ".csv", 'w' );
+		$df = fopen( $title . "-" . date( 'Y-m-d' ) . ".csv", 'w' );
 		foreach ( $array as $key => $value ) {
 			fputcsv( $df, array( $key ) );
 			foreach ( $value as $row ) {
@@ -339,7 +339,7 @@ class cURLtheme {
 
 	}
 
-	public function getTdDetailTheme( $array = [] ) {
+	public function getTdDetailTheme( &$array = [] ) {
 		if ( ! empty( $array ) ) {
 			/*
 			 * Array(
@@ -355,7 +355,7 @@ class cURLtheme {
 			    )
 			 * */
 			$output = '';
-			foreach ( $array as $v ) {
+			foreach ( $array as &$v ) {
 				/*
                     1= 'title',
                     0= 'url_title',
@@ -369,9 +369,16 @@ class cURLtheme {
 				$time = strtotime( $v[6] );
 
 				$date_diff = $now - $time;
-				$total_day = round( $date_diff / ( 60 * 60 * 24 ) );
 				$v[4]      = preg_replace( '#,#', '', $v[4] );
+
+				$date_now  = date( "d/m/Y", $now );
+				$total_day = round( $date_diff / ( 60 * 60 * 24 ) );
 				$res       = round( (int) $v[4] / $total_day, 2 );
+
+				$v[7] = $date_now;
+				$v[8] = $total_day;
+				$v[9] = $res;
+
 
 				$output .= '<tr>';
 				$output .= '<td></td>';
@@ -380,7 +387,7 @@ class cURLtheme {
 				$output .= '<td>' . $v[4] . '</td>';
 				$output .= '<td>' . $v[5] . '</td>';
 				$output .= '<td>' . date( 'd/m/Y', strtotime( $v[6] ) ) . '</td>';
-				$output .= '<td>' . date( "d/m/Y", $now ) . '</td>';
+				$output .= '<td>' . $date_now . '</td>';
 				$output .= '<td>' . $total_day . '</td>';
 				$output .= '<td>' . $res . '</td>';
 				$output .= '</tr>';
@@ -419,14 +426,19 @@ class cURLtheme {
 			<?php
 			$this->getRowKeyTable( $this->array_def );
 			foreach ( $_GET['themes'] as $value_url_theme ):
-				$theme_Detail = $this->getDetailTheme( $value_url_theme );
+				$theme_Detail[] = $this->getDetailTheme( $value_url_theme );
 
-				$this->getTdDetailTheme( array( $theme_Detail ) );
+
 			endforeach;
-
+			$this->getTdDetailTheme( $theme_Detail );
 			?>
         </table>
 		<?php
+		if ( ! empty( $theme_Detail ) ) {
+			return array( $theme_Detail );
+		} else {
+			return array();
+		}
 	}
 
 
@@ -448,13 +460,14 @@ class cURLtheme {
 				$this->getRowNitchesTable( $this->array_weekly_row, $key );
 				$i      = 1;
 				$output = '';
-				foreach ( $value as $v ) {
+				foreach ( $value as &$v ) {
+					$v[4]   = date( "d/m/Y" );
 					$output .= '<tr>';
 					$output .= '<td>' . $i ++ . '</td>';
 					$output .= '<td><a href="' . $v[1] . '">' . $v[0] . '</a></td>';
 					$output .= '<td>' . $v[2] . '</td>';
 					$output .= '<td>' . $v[3] . '</td>';
-					$output .= '<td>' . date( "d/m/Y" ) . '</td>';
+					$output .= '<td>' . $v[4] . '</td>';
 					$output .= '</tr>';
 				}
 				echo $output;
@@ -468,6 +481,11 @@ class cURLtheme {
 			?>
         </table>
 		<?php
+		if ( ! empty( $arr_top ) ) {
+			return $arr_top;
+		} else {
+			return array();
+		}
 	}
 
 	public function getAjaxTopCategory() {
@@ -502,7 +520,7 @@ class cURLtheme {
 				[1] => https://themeforest.net/item/greenwich-village-one-page-wordpress-theme/7472860?s_rank=2
 			)
 	*/
-		if ( true && ! empty( $res_rank_url ) ) {
+		if ( TRUE && ! empty( $res_rank_url ) ) {
 			foreach ( $res_rank_url as $key => $value ) {
 				foreach ( $value as $val ) {
 					$array_rank_url_detail[ $key ][] = $this->getDetailTheme( $val );
@@ -510,7 +528,7 @@ class cURLtheme {
 			}
 //		print_r( $array_rank_url_detail );
 		}
-		if ( true && ! empty( $array_rank_url_detail ) ):?>
+		if ( TRUE && ! empty( $array_rank_url_detail ) ):?>
 
             <table class="table-bordered">
 
@@ -526,9 +544,8 @@ class cURLtheme {
 		endif;
 
 //    print_r($detail_theme);
+		return $array_rank_url_detail;
 	}
-
-
 }
 
 ?>
