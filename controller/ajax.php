@@ -1,5 +1,8 @@
 <?php
-require( 'cURL.php' );
+echo '<pre>';
+print_r( __DIR__. '/config.php' );
+echo '</pre>';
+//require( ABS_PATH. '/controller/cURL.php' );
 //print_r( $_GET );
 
 //$curl = new cURLtheme();
@@ -17,17 +20,21 @@ require( 'cURL.php' );
 //echo '</pre>';
 if ( ! empty( $_GET['themes'] ) ) {
 
-	$curl = new cURLtheme();
+	$notnot = new cURLtheme();
 
 	switch ( $_GET['type'] ) {
 		case 'category' :
-			$curl->array2csv( $curl->getAjaxTopCategory(),'top' );
+			$theme = $_GET['themes'];
+			$sort  = ! empty( $_GET['sort'] ) ? $_GET['sort'] : '';
+			$date  = ! empty( $_GET['date'] ) ? $_GET['date'] : '';
+			$top   = ! empty( $_GET['top'] ) ? $_GET['top'] : '';
+			$notnot->array2csv( $notnot->getAjaxTopCategory( $theme, $sort, $date, $top ), 'top' );
 			break;
 		case 'detail':
-			$curl->array2csv( $curl->getAjaxDetailTheme(), 'detail' );
+			$notnot->array2csv( $notnot->getAjaxDetailTheme( $_GET['themes'] ), 'detail' );
 			break;
 		case 'weekly_sale':
-			$curl->array2csv( $curl->getAjaxWeeklySale(), 'weekly' );
+			$notnot->array2csv( $notnot->getAjaxWeeklySale( $_GET['themes'] ), 'weekly' );
 			break;
 	}
 } else {

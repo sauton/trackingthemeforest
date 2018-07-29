@@ -15,10 +15,15 @@
 <body>
 
 <?php
-
+print_r(defined('ABS_PATH'));
+require( 'config.php' );
 require( 'controller/cURL.php' );
 require( 'model/themeforest.php' );
 $rank = new cURLtheme();
+echo '<pre>';
+$theme=array('/wordpress/blog-magazine/news-editorial');
+//($rank->getAjaxWeeklySale($theme));
+echo '</pre>';
 ?>
 
 <div class="listcategory">
